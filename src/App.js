@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './Home';
-import Register from './Register';
-import Login from './Login';
+import Home from './Components/Home/Home';
+import Register from './Components/Register/Register';
+import Login from './Components/Home/Login';
 import Dashboard from './Dashboard';
 import CuponesDisponibles from './CuponesDisponibles'; // si ya lo creaste
 // import Perfil from './Perfil'; // si luego lo deseas
