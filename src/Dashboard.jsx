@@ -8,7 +8,7 @@ import {
   CardContent,
   Grid,
   Button,
-  Chip,  
+  Chip,    
   LinearProgress,
   Divider,
   Avatar,
