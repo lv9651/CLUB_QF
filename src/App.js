@@ -4,7 +4,7 @@ import Home from './Components/Home/Home';
 import Register from './Components/Register/Register';
 import Login from './Components/Home/Login';
 import Dashboard from './Dashboard';
-import CuponesDisponibles from './CuponesDisponibles'; // si ya lo creaste
+
 // import Perfil from './Perfil'; // si luego lo deseas
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
         <Route path="/registro" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/panel" element={<Dashboard />} />
-        <Route path="/cupones" element={<CuponesDisponibles />} />
+
         {/* <Route path="/perfil" element={<Perfil />} /> */}
       </Routes>
     </Router>

@@ -1,7 +1,8 @@
 
 import axios from "axios";
+import { BASE_URL } from '../Config/config'; 
 export const validarCompra = async ({ tipoDocumento, numeroDocumento, ultimaFechaCompra, ultimoMontoCompra }) => {
-  const response = await fetch("https://localhost:7257/api/Usuario/validar-compra", {
+  const response = await fetch(`${BASE_URL}/api/Usuario/validar-compra`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ tipoDocumento, numeroDocumento, ultimaFechaCompra, ultimoMontoCompra }),
@@ -10,7 +11,7 @@ export const validarCompra = async ({ tipoDocumento, numeroDocumento, ultimaFech
 };
 
 export const socialLogin = async (usuario) => {
-  const response = await fetch("https://localhost:7257/api/Usuario/social-login", {
+  const response = await fetch(`${BASE_URL}/api/Usuario/social-login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(usuario),
@@ -20,7 +21,7 @@ export const socialLogin = async (usuario) => {
 
 export const validarCorreo = async (correo) => {
   try {
-    const response = await axios.get(`https://localhost:7257/api/Usuario/validar-correo`, {
+    const response = await axios.get(`${BASE_URL}/api/Usuario/validar-correo`, {
       params: { correo },
     });
     return response.data;

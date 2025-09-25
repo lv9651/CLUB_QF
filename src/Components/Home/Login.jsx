@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { Box, Button, Container, Typography, Paper, Stack } from "@mui/material";
+import { Box, Button, Container, Typography, Paper, Stack, Snackbar, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { auth, googleProvider } from '../../utils/firebase';
+import { auth, googleProvider } from "../../utils/firebase";
 import { signInWithPopup } from "firebase/auth";
-import { validarCorreo } from '../../services/usuarioService';
-import { Snackbar, Alert } from "@mui/material";
+import { validarCorreo } from "../../services/usuarioService";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -19,35 +18,35 @@ const Login = () => {
   };
 
   const handleGoogleLogin = async () => {
-    try {
-      googleProvider.setCustomParameters({ prompt: "select_account" });
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
+  try {
+    googleProvider.setCustomParameters({ prompt: "select_account" });
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
 
-      if (!user.email) {
-        showMessage("No se pudo obtener el correo de Google", "error");
-        return;
-      }
-
-      // 🔹 Validar en la base de datos si existe ese correo
-      const validacion = await validarCorreo(user.email);
-
-      if (!validacion.existe) {
-        showMessage("⚠️ El correo no está registrado. Regístrate primero.", "error");
-        return;
-      }
-
-      // ✅ Si el correo existe, deja entrar
-      showMessage("✅ Bienvenido de nuevo", "success");
-
-      // Redirige al dashboard
-      navigate("/panel");
-
-    } catch (error) {
-      console.error(error);
-      showMessage("Error en inicio de sesión con Google", "error");
+    if (!user.email) {
+      showMessage("No se pudo obtener el correo de Google", "error");
+      return;
     }
-  };
+
+    // 🔹 Validar en la base de datos si existe ese correo
+    const usuarioDb = await validarCorreo(user.email);
+
+    if (!usuarioDb || !usuarioDb.correo) {
+      showMessage("⚠️ El correo no está registrado. Regístrate primero.", "error");
+      return;
+    }
+
+    // ✅ Mensaje de bienvenida
+    showMessage(`👋 Bienvenido ${usuarioDb.Nombre} ${usuarioDb.ApellidoPaterno}`, "success");
+
+    // 🔹 Redirige al panel con el correo desde la BD
+    navigate("/panel", { state: { correo: usuarioDb.correo, nombre:usuarioDb.nombre, apellidoPaterno:usuarioDb.apellidoPaterno, apellidoMaterno:usuarioDb.apellidoMaterno} });
+
+  } catch (error) {
+    console.error(error);
+    showMessage("Error en inicio de sesión con Google", "error");
+  }
+};
 
   return (
     <Box
@@ -70,18 +69,8 @@ const Login = () => {
           }}
         >
           <Stack spacing={3} alignItems="center" mb={3}>
-            <Box
-              component="img"
-              src="/logo-osc.png"
-              alt="Logo QF Club"
-              sx={{ height: 60 }}
-            />
-            <Typography
-              variant="h5"
-              fontWeight="bold"
-              color="#2C7873"
-              textAlign="center"
-            >
+            <Box component="img" src="/logo-osc.png" alt="Logo QF Club" sx={{ height: 60 }} />
+            <Typography variant="h5" fontWeight="bold" color="#2C7873" textAlign="center">
               Iniciar sesión
             </Typography>
           </Stack>
@@ -131,11 +120,7 @@ const Login = () => {
         onClose={() => setSnackbarOpen(false)}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert
-          onClose={() => setSnackbarOpen(false)}
-          severity={snackbarSeverity}
-          sx={{ width: "100%" }}
-        >
+        <Alert onClose={() => setSnackbarOpen(false)} severity={snackbarSeverity} sx={{ width: "100%" }}>
           {snackbarMessage}
         </Alert>
       </Snackbar>
